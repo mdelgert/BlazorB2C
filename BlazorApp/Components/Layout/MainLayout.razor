@@ -9,8 +9,7 @@
             <CascadingAuthenticationState>
                 <AuthorizeView>
                     <Authorized>
-                        @* User name not working at this time need to revisit *@
-                        @* Welcome @context.User.Identity?.Name *@
+                        Welcome @context.User.Identity?.Name
                         <a href="/MicrosoftIdentity/Account/SignOut">Log out</a>
                     </Authorized>
                     <NotAuthorized>

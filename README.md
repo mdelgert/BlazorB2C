@@ -15,3 +15,5 @@
 - [Microsoft Identity Web App Provisioning Tool](https://github.com/AzureAD/microsoft-identity-web/blob/master/tools/app-provisioning-tool/vs2019-16.9-how-to-use.md)
 
 - [Azure Samples: Microsoft Identity with Blazor Server](https://github.com/Azure-Samples/ms-identity-blazor-server)
+
+https://developer.microsoft.com/en-us/graph/gallery/?filterBy=Samples,SDKs
