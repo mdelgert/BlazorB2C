@@ -1,6 +1,7 @@
 ﻿@page "/weatherapi"
 @attribute [StreamRendering]
 @inject HttpClient Http
+@inject IConfiguration Configuration
 
 @using Shared.Models
 
@@ -47,8 +48,15 @@ else
     {
         try
         {
-            forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("https://localhost:7265/WeatherForecast");
-            
+            var apiEndpoint = Configuration["WeatherApi:BaseUrl"];
+            if (string.IsNullOrEmpty(apiEndpoint))
+            {
+                Logger.LogError("Weather API endpoint is not configured.");
+                return;
+            }
+
+            forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>($"{apiEndpoint}/WeatherForecast");
+
             if (forecasts == null)
             {
                 Logger.LogWarning("No weather data received.");
