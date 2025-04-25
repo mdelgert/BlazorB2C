@@ -17,3 +17,5 @@
 - [Azure Samples: Microsoft Identity with Blazor Server](https://github.com/Azure-Samples/ms-identity-blazor-server)
 
 https://developer.microsoft.com/en-us/graph/gallery/?filterBy=Samples,SDKs
+
+https://github.com/dotnet/aspnetcore/issues/52245

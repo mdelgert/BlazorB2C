@@ -1,5 +1,11 @@
 ﻿@page "/"
+@inject IConfiguration Configuration
 
 <PageTitle>Home</PageTitle>
 
-<h1>Demo</h1>
+<h4>Demo B2C</h4>
+<br/>
+
+<p>Environment: @Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")</p>
+
+<p>Version: @Configuration["Version"]</p>

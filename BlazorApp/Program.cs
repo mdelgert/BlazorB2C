@@ -13,6 +13,9 @@ builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAdB2C"));
 builder.Services.AddAuthorization();
 builder.Services.AddControllersWithViews().AddMicrosoftIdentityUI();
+
+//.NET 8 Upgrade Causes Post-Logout Loop in Blazor Server App with Azure AD B2C
+builder.Services.AddRazorPages(); //https://github.com/dotnet/aspnetcore/issues/52245
 // ################################################ AD B2C configuration end ################################################
 
 var app = builder.Build();
