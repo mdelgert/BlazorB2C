@@ -2,6 +2,8 @@
 @attribute [StreamRendering]
 @inject HttpClient Http
 
+@using Shared.Models
+
 <PageTitle>Weather</PageTitle>
 
 <h1>Weather API</h1>
@@ -60,13 +62,5 @@ else
         {
             Logger.LogError($"Error fetching weather data: {ex.Message}");
         }
-    }
-
-    private class WeatherForecast
-    {
-        public DateOnly Date { get; set; }
-        public int TemperatureC { get; set; }
-        public string? Summary { get; set; }
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
     }
 }
