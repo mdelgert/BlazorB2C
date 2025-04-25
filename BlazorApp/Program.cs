@@ -16,6 +16,9 @@ builder.Services.AddControllersWithViews().AddMicrosoftIdentityUI();
 // ################################################ AD B2C configuration end ################################################
 
 var app = builder.Build();
+var logger = app.Services.GetRequiredService<ILogger<Program>>();
+
+logger.LogInformation("Starting BlazorApp...");
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -42,4 +45,7 @@ app.MapControllers();
 
 app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
 
+logger.LogInformation("BlazorApp started successfully.");
+
 app.Run();
+
