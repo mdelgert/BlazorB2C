@@ -1,5 +1,7 @@
 ﻿@inherits LayoutComponentBase
 
+@inject ILogger<MainLayout> Logger
+
 <div class="page">
     <div class="sidebar">
         <NavMenu />
@@ -9,7 +11,17 @@
             <CascadingAuthenticationState>
                 <AuthorizeView>
                     <Authorized>
-                        Welcome @context.User.Identity?.Name
+                        @if (context.User.Identity?.Name != null)
+                        {
+                            var email = context.User.Claims.FirstOrDefault(c => c.Type == "emails")?.Value;
+                            Logger.LogInformation($"User logged in: {context.User.Identity.Name}, Email: {email}");
+                            <text>@email</text>
+                        }
+                        else
+                        {
+                            <text>Welcome @context.User.Identity?.Name</text>
+                        }
+                        @* Welcome @context.User.Identity?.Name *@
                         <a href="/MicrosoftIdentity/Account/SignOut">Log out</a>
                     </Authorized>
                     <NotAuthorized>
