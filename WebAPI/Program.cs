@@ -9,13 +9,6 @@ builder.Services.AddSwaggerGen(); // Learn more about configuring Swagger/OpenAP
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment())
-//{
-//    app.UseSwagger();
-//    app.UseSwaggerUI(ModernStyle.Dark);
-//}
-
 // Add middleware to redirect the root URL to Swagger UI
 app.Use(async (context, next) =>
 {
