@@ -1,0 +1,74 @@
+﻿@page "/weathersecureapi"
+@attribute [StreamRendering]
+@inject HttpClient Http
+@inject IConfiguration Configuration
+
+@using Shared.Models
+
+<PageTitle>Weather</PageTitle>
+
+<h1>Weather API</h1>
+
+<p>This component demonstrates showing data.</p>
+
+@if (forecasts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Temp. (C)</th>
+                <th>Temp. (F)</th>
+                <th>Summary</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var forecast in forecasts)
+            {
+                <tr>
+                    <td>@forecast.Date.ToShortDateString()</td>
+                    <td>@forecast.TemperatureC</td>
+                    <td>@forecast.TemperatureF</td>
+                    <td>@forecast.Summary</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    [Inject] private ILogger<Index> Logger { get; set; } = default!;
+    private WeatherForecast[]? forecasts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var apiEndpoint = Configuration["WeatherApi:SecureUrl"];
+            if (string.IsNullOrEmpty(apiEndpoint))
+            {
+                Logger.LogError("Weather API endpoint is not configured.");
+                return;
+            }
+
+            forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>($"{apiEndpoint}/WeatherForecast");
+
+            if (forecasts == null)
+            {
+                Logger.LogWarning("No weather data received.");
+            }
+            else
+            {
+                Logger.LogInformation($"Received {forecasts.Length} weather forecasts.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError($"Error fetching weather data: {ex.Message}");
+        }
+    }
+}
