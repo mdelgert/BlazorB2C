@@ -33,3 +33,5 @@
 - [JWT.MS - JWT Decoder](https://jwt.ms/)
 
 https://learn.microsoft.com/en-us/entra/identity-platform/scenario-web-api-call-api-app-configuration?tabs=aspnetcore
+
+https://github.com/Azure-Samples/ms-identity-docs-code-dotnet/tree/main
