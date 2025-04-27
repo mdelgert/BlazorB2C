@@ -2,6 +2,7 @@ using Shared.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Web.Resource;
+using Microsoft.Extensions.Logging;
 
 namespace SecureAPI.Controllers
 {
@@ -21,6 +22,12 @@ namespace SecureAPI.Controllers
         [HttpGet(Name = "GetWeatherForecast")]
         public IEnumerable<WeatherForecast> Get()
         {
+            var userName = User.Identity?.Name ?? "anonymous";
+            var userEmail = User.Claims.FirstOrDefault(c => c.Type == "emails")?.Value;
+
+            // Log the user information
+            _logger.LogInformation($"User: {userName}, Email: {userEmail}");
+
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
