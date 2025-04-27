@@ -34,4 +34,6 @@
 
 https://learn.microsoft.com/en-us/entra/identity-platform/scenario-web-api-call-api-app-configuration?tabs=aspnetcore
 
+https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-web-app-sign-in?pivots=workforce&tabs=asp-dot-net-core-workforce%2Cnode-external#clone-or-download-sample-web-application
+
 https://github.com/Azure-Samples/ms-identity-docs-code-dotnet/tree/main
