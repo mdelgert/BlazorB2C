@@ -25,7 +25,11 @@ app.Use(async (context, next) =>
     await next();
 });
 
-app.UseSwagger();
+app.UseSwagger(c =>
+{
+    c.OpenApiVersion = Microsoft.OpenApi.OpenApiSpecVersion.OpenApi2_0;
+});
+
 app.UseSwaggerUI(ModernStyle.Dark);
 app.UseHttpsRedirection();
 app.UseAuthentication();
