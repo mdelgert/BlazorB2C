@@ -31,3 +31,5 @@
 
 ## Token Verification Tools
 - [JWT.MS - JWT Decoder](https://jwt.ms/)
+
+https://learn.microsoft.com/en-us/entra/identity-platform/scenario-web-api-call-api-app-configuration?tabs=aspnetcore
