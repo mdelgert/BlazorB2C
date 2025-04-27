@@ -22,7 +22,7 @@ namespace SecureAPI.Controllers
         [HttpGet(Name = "GetWeatherForecast")]
         public IEnumerable<WeatherForecast> Get()
         {
-            var userName = User.Identity?.Name ?? "anonymous";
+            var userName = User.Claims.FirstOrDefault(c => c.Type == "name")?.Value;
             var userEmail = User.Claims.FirstOrDefault(c => c.Type == "emails")?.Value;
 
             // Log the user information
