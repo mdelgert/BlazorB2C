@@ -23,3 +23,11 @@
 
 ## Additional Resources
 - [Azure AD Change Management Simplified](https://techcommunity.microsoft.com/blog/microsoft-entra-blog/azure-ad-change-management-simplified/2967456)
+
+## Postman Resources
+- [Calling an Azure AD Secured API with Postman](https://dev.to/425show/calling-an-azure-ad-secured-api-with-postman-22co)
+- [Setting Azure AD B2C Authentication in Postman](https://akshaybabloo.medium.com/setting-azure-ad-b2c-authentication-in-postman-b8e7e1e48513)
+- [Request Access Token in Postman for Azure AD B2C](https://stackoverflow.com/questions/47275079/request-access-token-in-postman-for-azure-ad-b2c)
+
+## Token Verification Tools
+- [JWT.MS - JWT Decoder](https://jwt.ms/)
