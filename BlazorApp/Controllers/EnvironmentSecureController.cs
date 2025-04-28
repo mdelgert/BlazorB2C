@@ -3,9 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Web.Resource;
 using Microsoft.Extensions.Logging;
 
-
-//https://localhost:7155/EnvironmentSecure
-
 namespace WebAPI.Controllers
 {
     [Authorize]

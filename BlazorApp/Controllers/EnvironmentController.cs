@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 
-//https://localhost:7155/Environment
-
 namespace WebAPI.Controllers
 {
     [ApiController]
