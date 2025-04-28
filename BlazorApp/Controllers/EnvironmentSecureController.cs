@@ -1,11 +1,17 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Web.Resource;
+using Microsoft.Extensions.Logging;
+
 
 //https://localhost:7155/EnvironmentSecure
 
 namespace WebAPI.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
+    [RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
     public class EnvironmentSecureController : ControllerBase
     {
         private readonly IWebHostEnvironment _environment;
