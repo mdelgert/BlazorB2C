@@ -31,3 +31,13 @@
 
 ## Token Verification Tools
 - [JWT.MS - JWT Decoder](https://jwt.ms/)
+
+https://github.com/AzureAD/microsoft-identity-web/tree/master/src/Microsoft.Identity.Web.Azure
+
+https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-web-app-sign-in?pivots=workforce&tabs=node-workforce%2Cnode-external
+
+https://learn.microsoft.com/en-us/entra/identity-platform/scenario-web-app-call-api-call-api?tabs=aspnetcore
+
+https://learn.microsoft.com/en-us/entra/identity-platform/scenario-web-app-call-api-app-configuration?tabs=aspnetcore
+
+https://github.com/Azure-Samples/ms-identity-docs-code-dotnet/blob/main/console-cli/Program.cs
