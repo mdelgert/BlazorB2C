@@ -1,4 +1,6 @@
 ﻿@page "/weathersecureapi"
+@rendermode InteractiveServer
+@inherits WeatherForecastBase
 @attribute [StreamRendering]
 @inject HttpClient Http
 @inject IConfiguration Configuration
@@ -8,6 +10,10 @@
 <PageTitle>Weather</PageTitle>
 
 <h1>Weather API</h1>
+
+<button class="btn btn-primary" @onclick="GetWeatherForecast">Test</button>
+
+@*
 
 <p>This component demonstrates showing data.</p>
 
@@ -71,4 +77,5 @@ else
             Logger.LogError($"Error fetching weather data: {ex.Message}");
         }
     }
-}
+} 
+*@

@@ -37,3 +37,9 @@ https://learn.microsoft.com/en-us/entra/identity-platform/scenario-web-api-call-
 https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-web-app-sign-in?pivots=workforce&tabs=asp-dot-net-core-workforce%2Cnode-external#clone-or-download-sample-web-application
 
 https://github.com/Azure-Samples/ms-identity-docs-code-dotnet/tree/main
+
+https://learn.microsoft.com/en-us/entra/identity-platform/how-to-add-credentials?tabs=certificate#prerequisites
+
+https://learn.microsoft.com/en-gb/entra/external-id/customers/quickstart-trial-setup
+
+https://learn.microsoft.com/en-us/entra/identity-platform/tutorial-web-api-dotnet-core-build-app?tabs=workforce-tenant
