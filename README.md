@@ -41,3 +41,5 @@ https://learn.microsoft.com/en-us/entra/identity-platform/scenario-web-app-call-
 https://learn.microsoft.com/en-us/entra/identity-platform/scenario-web-app-call-api-app-configuration?tabs=aspnetcore
 
 https://github.com/Azure-Samples/ms-identity-docs-code-dotnet/blob/main/console-cli/Program.cs
+
+https://github.com/Azure-Samples/ms-identity-ciam-dotnet-tutorial/tree/main/2-Authorization/3-call-own-api-dotnet-core-daemon
