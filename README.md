@@ -43,3 +43,7 @@ https://learn.microsoft.com/en-us/entra/identity-platform/how-to-add-credentials
 https://learn.microsoft.com/en-gb/entra/external-id/customers/quickstart-trial-setup
 
 https://learn.microsoft.com/en-us/entra/identity-platform/tutorial-web-api-dotnet-core-build-app?tabs=workforce-tenant
+
+https://learn.microsoft.com/en-us/entra/identity-platform/scenario-web-api-call-api-app-configuration?tabs=aspnetcore
+
+https://github.com/AzureAD/microsoft-identity-web/wiki/token-cache-serialization
