@@ -11,8 +11,8 @@
     <PackageReference Include="Microsoft.Identity.Web" Version="3.8.4" />
     <PackageReference Include="Microsoft.Identity.Web.DownstreamApi" Version="3.8.4" />
     <PackageReference Include="Microsoft.Identity.Web.UI" Version="3.8.4" />
-	<PackageReference Include="AspNetCore.SwaggerUI.Themes" Version="2.0.0" />
-	<PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.1" />
+    <PackageReference Include="AspNetCore.SwaggerUI.Themes" Version="2.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Shared\Shared.csproj" />
