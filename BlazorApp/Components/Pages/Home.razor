@@ -6,6 +6,8 @@
 <h4>Demo B2C</h4>
 <br/>
 
+<a href="@GetSwaggerUrl()/swagger" target="_blank">Swagger</a>
+
 @* <p>Environment: @Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")</p> *@
 
 <p>Version: @Configuration["Version"]</p>
@@ -32,3 +34,17 @@
         }
     </tbody>
 </table>
+
+@code {
+    private string GetSwaggerUrl()
+    {
+        var swaggerUrl = Configuration["SwaggerUrl"];
+
+        if (!string.IsNullOrEmpty(swaggerUrl))
+        {
+            return swaggerUrl;
+        }
+
+        return Configuration["SwaggerUrl"] ?? "https://localhost:8083";
+    }
+}

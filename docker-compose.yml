@@ -4,3 +4,8 @@ services:
     build:
       context: .
       dockerfile: BlazorApp/Dockerfile
+  authconnector:
+    image: ${DOCKER_REGISTRY-}authconnector
+    build:
+      context: .
+      dockerfile: AuthConnector/Dockerfile
