@@ -16,24 +16,7 @@
 
 <p>SecureUrl: @Configuration["WeatherApi:SecureUrl"]</p>
 
-<h5>All Environment Variables</h5>
-<table class="table table-sm table-bordered">
-    <thead>
-        <tr>
-            <th>Key</th>
-            <th>Value</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (System.Collections.DictionaryEntry env in Environment.GetEnvironmentVariables())
-        {
-            <tr>
-                <td>@env.Key</td>
-                <td>@env.Value</td>
-            </tr>
-        }
-    </tbody>
-</table>
+
 
 @code {
     private string GetSwaggerUrl()
