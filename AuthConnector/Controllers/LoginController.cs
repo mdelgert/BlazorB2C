@@ -1,4 +1,5 @@
 ﻿using AuthConnector.Services;
+using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -26,6 +27,12 @@ namespace AuthConnector.Controllers
         {
             try
             {
+                // Get the request body
+                string requestBody = await new StreamReader(Request.Body).ReadToEndAsync();
+
+                // Get the json body using System.Text.Json
+                var jsonBody = JsonSerializer.Deserialize<JsonElement>(requestBody);
+
                 // Check HTTP basic authorization using the Request property
                 if (!Authorize())
                 {
@@ -38,7 +45,7 @@ namespace AuthConnector.Controllers
                 var log = new Models.LogModel
                 {
                     LogLevel = "Info",
-                    Message = "Login requested"
+                    Message = jsonBody.ToString()
                 };
 
                 await _context.Logs.AddAsync(log);
