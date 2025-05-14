@@ -1,8 +1,10 @@
-﻿using AuthConnector.Services;
-using System.Text.Json;
+﻿//https://github.com/Azure-Samples/active-directory-dotnet-external-identities-api-connector-azure-function-validate/blob/master/SignUpValidation.cs
+using AuthConnector.Models;
+using AuthConnector.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 
 namespace AuthConnector.Controllers
 {
@@ -21,7 +23,6 @@ namespace AuthConnector.Controllers
             _configuration = configuration;
         }
 
-        //https://github.com/Azure-Samples/active-directory-dotnet-external-identities-api-connector-azure-function-validate/blob/master/SignUpValidation.cs
         [HttpGet(Name = "GetLogin")]
         public async Task<IActionResult> Get()
         {
@@ -31,7 +32,14 @@ namespace AuthConnector.Controllers
                 string requestBody = await new StreamReader(Request.Body).ReadToEndAsync();
 
                 // Get the json body using System.Text.Json
-                var jsonBody = JsonSerializer.Deserialize<JsonElement>(requestBody);
+                dynamic data = JsonConvert.DeserializeObject(requestBody);
+
+
+                // If input data is null, show block page
+                if (data == null)
+                {
+                    return (ActionResult)new OkObjectResult(new ResponseContent("ShowBlockPage", "There was a problem with your request."));
+                }
 
                 // Check HTTP basic authorization using the Request property
                 if (!Authorize())
@@ -45,7 +53,7 @@ namespace AuthConnector.Controllers
                 var log = new Models.LogModel
                 {
                     LogLevel = "Info",
-                    Message = jsonBody.ToString()
+                    Message = data.ToString()
                 };
 
                 await _context.Logs.AddAsync(log);
@@ -57,7 +65,17 @@ namespace AuthConnector.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
             }
 
-            return Ok("Hello Login!");
+            //return Ok("Hello Login!");
+
+            // Input validation passed successfully, return `Allow` response.
+            // TO DO: Configure the claims you want to return
+            return (ActionResult)new OkObjectResult(new ResponseContent()
+            {
+                jobTitle = "This value return by the API Connector"//,
+                // You can also return custom claims using extension properties.
+                //extension_CustomClaim = "my custom claim response"
+            });
+
         }
 
         private bool Authorize()
