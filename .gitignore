@@ -402,3 +402,6 @@ FodyWeavers.xsd
 # Exclude development application settings
 appsettings.*.json
 !appsettings.Example.json
+
+# Ignore arm json files
+*.arm.json
