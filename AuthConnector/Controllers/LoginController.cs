@@ -36,16 +36,16 @@ namespace AuthConnector.Controllers
 
 
                 // If input data is null, show block page
-                if (data == null)
-                {
-                    return (ActionResult)new OkObjectResult(new ResponseContent("ShowBlockPage", "There was a problem with your request."));
-                }
+                //if (data == null)
+                //{
+                //    return (ActionResult)new OkObjectResult(new ResponseContent("ShowBlockPage", "There was a problem with your request."));
+                //}
 
                 // Check HTTP basic authorization using the Request property
                 if (!Authorize())
                 {
                     _logger.LogWarning("HTTP basic authentication validation failed.");
-                    return new UnauthorizedResult();
+                    //return new UnauthorizedResult();
                 }
 
                 _logger.LogInformation("Login requested");
@@ -71,7 +71,7 @@ namespace AuthConnector.Controllers
             // TO DO: Configure the claims you want to return
             return (ActionResult)new OkObjectResult(new ResponseContent()
             {
-                jobTitle = "This value return by the API Connector"//,
+                //jobTitle = "This value return by the API Connector"//,
                 // You can also return custom claims using extension properties.
                 //extension_CustomClaim = "my custom claim response"
             });
