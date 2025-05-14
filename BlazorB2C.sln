@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecureAPI", "SecureAPI\Secu
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{81DDED9D-158B-E303-5F62-77A2896D2A5A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthConnector", "AuthConnector\AuthConnector.csproj", "{52EDB4B6-9F46-4621-84E3-B8C1A138B3D2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,8 +41,15 @@ Global
 		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52EDB4B6-9F46-4621-84E3-B8C1A138B3D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52EDB4B6-9F46-4621-84E3-B8C1A138B3D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52EDB4B6-9F46-4621-84E3-B8C1A138B3D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52EDB4B6-9F46-4621-84E3-B8C1A138B3D2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {948AA0D4-C124-404C-A303-B4096652F298}
 	EndGlobalSection
 EndGlobal

@@ -401,3 +401,4 @@ FodyWeavers.xsd
 
 # Exclude development application settings
 appsettings.*.json
+!appsettings.Example.json
