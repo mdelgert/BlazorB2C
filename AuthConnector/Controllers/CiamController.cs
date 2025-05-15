@@ -71,7 +71,8 @@ namespace AuthConnector.Controllers
             string givenName = data.givenName;
             string surName = data.surName;
 
-            var tenantId = "your-tenant-id-guid";
+            //var tenantId = "your-tenant-id-guid";
+            var tenantId = _configuration["AzureAd:TenantId"];
 
             if (method == "auth")
             {
