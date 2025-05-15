@@ -28,13 +28,23 @@ namespace AuthConnector.Controllers
         {
             try
             {
+                var log = new LogModel
+                {
+                    LogLevel = "Info",
+                    Message = ""
+                };
+
+                _logger.LogInformation("Login requested");
+                log.Message = "Login requested";
+
                 // Get the request body
                 string requestBody = await new StreamReader(Request.Body).ReadToEndAsync();
                 
                 if (string.IsNullOrWhiteSpace(requestBody))
                 {
                     _logger.LogWarning("Request body is null or empty.");
-                    return BadRequest("Request body cannot be empty.");
+                    log.Message = "Request body cannot be empty.";
+                    //return BadRequest();
                 }
 
                 // Get the json body using Newtonsoft.Json
@@ -46,29 +56,28 @@ namespace AuthConnector.Controllers
                 catch (JsonException jsonEx)
                 {
                     _logger.LogWarning(jsonEx, "Invalid JSON in request body.");
-                    return BadRequest("Invalid JSON format.");
+                    log.Message = "Invalid JSON format.";
+                    //return BadRequest("Invalid JSON format.");
                 }
 
                 if (data == null)
                 {
                     _logger.LogWarning("Deserialized data is null.");
-                    return BadRequest("Request body could not be parsed.");
+                    log.Message = "Request body could not be parsed.";
+                    //return BadRequest("Request body could not be parsed.");
+                }
+                else
+                {
+                    log.Message = data?.ToString() ?? string.Empty;
                 }
 
                 // Check HTTP basic authorization using the Request property
                 if (!Authorize())
                 {
                     _logger.LogWarning("HTTP basic authentication validation failed.");
+                    log.Message = "HTTP basic authentication validation failed.";
                     //return new UnauthorizedResult();
                 }
-
-                _logger.LogInformation("Login requested");
-
-                var log = new Models.LogModel
-                {
-                    LogLevel = "Info",
-                    Message = data?.ToString() ?? string.Empty
-                };
 
                 await _context.Logs.AddAsync(log);
                 await _context.SaveChangesAsync();
