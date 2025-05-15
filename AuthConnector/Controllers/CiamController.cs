@@ -73,11 +73,13 @@ namespace AuthConnector.Controllers
                     if (ciamRequest.method == "auth")
                     {
 
-                        var scopes = new[] { "User.ReadWrite.All" };
+                        //var scopes = new[] { "User.ReadWrite.All" };
+                        var scopes = new[] { "User.Read" };
 
                         // Multi-tenant apps can use "common",
                         // single-tenant apps must use the tenant ID from the Azure portal
-                        var tenantId = "common";
+                        //var tenantId = "common";
+                        var tenantId = _configuration["AzureAd:TenantId"];
 
                         // Value from app registration
                         var clientId = _configuration["AzureAd:ClientId"];

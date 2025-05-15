@@ -69,10 +69,10 @@ namespace AuthConnector.Controllers
                 string password = data.password;
                 string method = data.method;
 
-                //string phoneNumber = data.phoneNumber;
-                //string displayName = data.displayName;
-                //string givenName = data.givenName;
-                //string surName = data.surName;
+                string phoneNumber = data.phoneNumber;
+                string displayName = data.displayName;
+                string givenName = data.givenName;
+                string surName = data.surName;
 
                 //var tenantId = "your-tenant-id-guid";
                 var tenantId = _configuration["AzureAd:TenantId"];
@@ -163,7 +163,6 @@ namespace AuthConnector.Controllers
                         return new OkObjectResult(user);
                     }
 
-                    /*
                     if (method == "createUser")
                     {
                         var userRequestBody = new User
@@ -236,7 +235,6 @@ namespace AuthConnector.Controllers
                         var enrolResult = await graphClient.Users[objectId].Authentication.PhoneMethods.PostAsync(mfaRequestBody);
                         return new OkObjectResult(enrolResult);
                     }
-                    */
                 }
             }
             catch (Exception ex)
