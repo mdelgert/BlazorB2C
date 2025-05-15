@@ -70,6 +70,46 @@ namespace AuthConnector.Controllers
                     // Deserialize into a strongly-typed model
                     var ciamRequest = JsonConvert.DeserializeObject<CiamRequestModel>(requestBody!);
 
+                    if (ciamRequest.method == "auth")
+                    {
+
+                        var scopes = new[] { "User.Read" };
+
+                        // Multi-tenant apps can use "common",
+                        // single-tenant apps must use the tenant ID from the Azure portal
+                        var tenantId = "common";
+
+                        // Value from app registration
+                        var clientId = _configuration["AzureAd:ClientId"];
+
+                        // using Azure.Identity;
+                        var options = new UsernamePasswordCredentialOptions
+                        {
+                            AuthorityHost = AzureAuthorityHosts.AzurePublicCloud,
+                        };
+
+                        // https://learn.microsoft.com/dotnet/api/azure.identity.usernamepasswordcredential
+                        var userNamePasswordCredential = new UsernamePasswordCredential(
+                            ciamRequest.email, ciamRequest.password, tenantId, clientId, options);
+
+                        var graphClient = new GraphServiceClient(userNamePasswordCredential, scopes);
+
+                        // Get the user
+                        var user = await graphClient.Users[ciamRequest.objectId].GetAsync();
+                        
+                        if (user != null)
+                        {
+                            // Log the user information
+                            log.Message = JsonConvert.SerializeObject(user);
+                        }
+                        else
+                        {
+                            // Log the error message
+                            log.Message = "User not found.";
+                        }
+
+                    }
+
                     // Log the deserialized object
                     log.Message = JsonConvert.SerializeObject(ciamRequest);
                 }
