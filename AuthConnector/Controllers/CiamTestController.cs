@@ -82,9 +82,7 @@ namespace AuthConnector.Controllers
                     using (var httpClient = new HttpClient())
                     {
                         // Build the request URL
-                        //var requestUrl = "https://ciamprod.ciamlogin.com/c9d7a627-dfab-45ba-92ee-54b19379dc3d/oauth2/token";
-                        var requestUrl = "https://espdetest.ciamlogin.com/4bf8531d-5498-450d-b5b2-f6c9be49d1bb/oauth2/token";
-
+                        var requestUrl = "https://ciamprod.ciamlogin.com/c9d7a627-dfab-45ba-92ee-54b19379dc3d/oauth2/token";
                         string auth_resource = "https://graph.microsoft.com"; // Replace with your specific resource URL
                         
                         //string auth_clientId = "your-clientId-RopcFromB2C";
