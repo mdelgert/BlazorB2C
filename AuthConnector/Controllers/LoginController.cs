@@ -30,6 +30,7 @@ namespace AuthConnector.Controllers
             {
                 // Get the request body
                 string requestBody = await new StreamReader(Request.Body).ReadToEndAsync();
+                
                 if (string.IsNullOrWhiteSpace(requestBody))
                 {
                     _logger.LogWarning("Request body is null or empty.");

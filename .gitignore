@@ -400,8 +400,5 @@ FodyWeavers.xsd
 *.sln.iml
 
 # Exclude development application settings
-appsettings.*.json
+*.json
 !appsettings.Example.json
-
-# Ignore arm json files
-*.arm.json
