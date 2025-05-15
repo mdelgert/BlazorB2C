@@ -23,23 +23,36 @@ namespace AuthConnector.Controllers
             _configuration = configuration;
         }
 
-        [HttpGet(Name = "GetLogin")]
-        public async Task<IActionResult> Get()
+        [HttpPost]
+        public async Task<IActionResult> Post()
         {
             try
             {
                 // Get the request body
                 string requestBody = await new StreamReader(Request.Body).ReadToEndAsync();
+                if (string.IsNullOrWhiteSpace(requestBody))
+                {
+                    _logger.LogWarning("Request body is null or empty.");
+                    return BadRequest("Request body cannot be empty.");
+                }
 
-                // Get the json body using System.Text.Json
-                dynamic data = JsonConvert.DeserializeObject(requestBody);
+                // Get the json body using Newtonsoft.Json
+                object? data = null;
+                try
+                {
+                    data = JsonConvert.DeserializeObject(requestBody);
+                }
+                catch (JsonException jsonEx)
+                {
+                    _logger.LogWarning(jsonEx, "Invalid JSON in request body.");
+                    return BadRequest("Invalid JSON format.");
+                }
 
-
-                // If input data is null, show block page
-                //if (data == null)
-                //{
-                //    return (ActionResult)new OkObjectResult(new ResponseContent("ShowBlockPage", "There was a problem with your request."));
-                //}
+                if (data == null)
+                {
+                    _logger.LogWarning("Deserialized data is null.");
+                    return BadRequest("Request body could not be parsed.");
+                }
 
                 // Check HTTP basic authorization using the Request property
                 if (!Authorize())
@@ -53,7 +66,7 @@ namespace AuthConnector.Controllers
                 var log = new Models.LogModel
                 {
                     LogLevel = "Info",
-                    Message = data.ToString()
+                    Message = data?.ToString() ?? string.Empty
                 };
 
                 await _context.Logs.AddAsync(log);
@@ -65,17 +78,14 @@ namespace AuthConnector.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
             }
 
-            //return Ok("Hello Login!");
-
             // Input validation passed successfully, return `Allow` response.
             // TO DO: Configure the claims you want to return
-            return (ActionResult)new OkObjectResult(new ResponseContent()
+            return new OkObjectResult(new ResponseContent()
             {
                 //jobTitle = "This value return by the API Connector"//,
                 // You can also return custom claims using extension properties.
                 //extension_CustomClaim = "my custom claim response"
             });
-
         }
 
         private bool Authorize()
