@@ -73,7 +73,7 @@ namespace AuthConnector.Controllers
                     if (ciamRequest.method == "auth")
                     {
 
-                        var scopes = new[] { "User.Read" };
+                        var scopes = new[] { "User.ReadWrite.All" };
 
                         // Multi-tenant apps can use "common",
                         // single-tenant apps must use the tenant ID from the Azure portal
@@ -94,19 +94,11 @@ namespace AuthConnector.Controllers
 
                         var graphClient = new GraphServiceClient(userNamePasswordCredential, scopes);
 
-                        // Get the user
+                        // Get the user and log the details
                         var user = await graphClient.Users[ciamRequest.objectId].GetAsync();
                         
-                        if (user != null)
-                        {
-                            // Log the user information
-                            log.Message = JsonConvert.SerializeObject(user);
-                        }
-                        else
-                        {
-                            // Log the error message
-                            log.Message = "User not found.";
-                        }
+                        // Log the user details
+                        log.Message = JsonConvert.SerializeObject(user);
 
                     }
 
