@@ -93,7 +93,7 @@ namespace AuthConnector.Controllers
                 //if (!Authorize())
                 //{
                 //    _logger.LogWarning("HTTP basic authentication validation failed.");
-                //    log.Message = "HTTP basic authentication validation failed.";
+                //    _logger.Message = "HTTP basic authentication validation failed.";
                 //    //return new UnauthorizedResult();
                 //}
 

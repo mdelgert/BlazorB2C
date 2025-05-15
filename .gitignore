@@ -402,3 +402,7 @@ FodyWeavers.xsd
 # Exclude development application settings
 *.json
 !appsettings.Example.json
+
+# Exclude Azure AD B2C custom policies
+# https://docs.microsoft.com/en-us/azure/active-directory-b2c/custom-policy-get-started
+B2C_1A_Extension_OrchestrateToCiamAzure.xml

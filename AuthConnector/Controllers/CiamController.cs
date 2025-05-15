@@ -28,15 +28,13 @@ namespace AuthConnector.Controllers
     public class CiamController : ControllerBase
     {
         private readonly DbService _context;
-        //private readonly ILogger<CiamController> _logger;
-        private readonly ILogger<CiamController> log;
+        private readonly ILogger<CiamController> _logger;
         private readonly IConfiguration _configuration;
 
         public CiamController(DbService context, ILogger<CiamController> logger, IConfiguration configuration)
         {
             _context = context;
-            //_logger = logger;
-            log = logger;
+            _logger = logger;
             _configuration = configuration;
         }
 
@@ -58,104 +56,122 @@ namespace AuthConnector.Controllers
         // Shared logic for both GET and POST
         private async Task<IActionResult> HandleLoginAsync(bool isPost)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
+            _logger.LogInformation("C# HTTP trigger function processed a request.");
 
-            string requestBody = await new StreamReader(Request.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            string objectId = data.objectId;
-            string email = data.email;
-            string password = data.password;
-            string method = data.method;
-            string phoneNumber = data.phoneNumber;
-            string displayName = data.displayName;
-            string givenName = data.givenName;
-            string surName = data.surName;
-
-            //var tenantId = "your-tenant-id-guid";
-            var tenantId = _configuration["AzureAd:TenantId"];
-
-            if (method == "auth")
+            try
             {
-                using (var httpClient = new HttpClient())
+                string? requestBody = Request.ContentLength > 0 ? await new StreamReader(Request.Body).ReadToEndAsync() : null;
+
+                await _context.Logs.AddAsync(new LogModel { LogLevel = "Info", Message = requestBody });
+                await _context.SaveChangesAsync();
+
+                dynamic data = JsonConvert.DeserializeObject(requestBody);
+                string objectId = data.objectId;
+                string email = data.email;
+                string password = data.password;
+                string method = data.method;
+
+                //string phoneNumber = data.phoneNumber;
+                //string displayName = data.displayName;
+                //string givenName = data.givenName;
+                //string surName = data.surName;
+
+                //var tenantId = "your-tenant-id-guid";
+                var tenantId = _configuration["AzureAd:TenantId"];
+
+                if (method == "auth")
                 {
-                    // Build the request URL
-                    var requestUrl = "https://ciamprod.ciamlogin.com/c9d7a627-dfab-45ba-92ee-54b19379dc3d/oauth2/token";
-                    string auth_resource = "https://graph.microsoft.com"; // Replace with your specific resource URL
-                    string auth_clientId = "your-clientId-RopcFromB2C";
-
-                    // Prepare the request body
-                    var auth_requestBody = $"resource={auth_resource}&client_id={auth_clientId}&grant_type=password&username={email}&password={password}&nca=1";
-
-                    // Convert the request body to a byte array
-                    var content = new StringContent(auth_requestBody, Encoding.UTF8, "application/x-www-form-urlencoded");
-
-                    // Send the POST request to Azure AD
-                    using (var response = await httpClient.PostAsync(requestUrl, content))
+                    using (var httpClient = new HttpClient())
                     {
-                        // Check if the request was successful
-                        if (response.IsSuccessStatusCode)
+                        // Build the request URL
+                        //var requestUrl = "https://ciamprod.ciamlogin.com/c9d7a627-dfab-45ba-92ee-54b19379dc3d/oauth2/token";
+                        var requestUrl = "https://espdetest.ciamlogin.com/4bf8531d-5498-450d-b5b2-f6c9be49d1bb/oauth2/token";
+
+                        string auth_resource = "https://graph.microsoft.com"; // Replace with your specific resource URL
+                        
+                        //string auth_clientId = "your-clientId-RopcFromB2C";
+                        string auth_clientId = _configuration["AzureAd:ClientId"];
+
+                        // Prepare the request body
+                        var auth_requestBody = $"resource={auth_resource}&client_id={auth_clientId}&grant_type=password&username={email}&password={password}&nca=1";
+
+                        // Convert the request body to a byte array
+                        var content = new StringContent(auth_requestBody, Encoding.UTF8, "application/x-www-form-urlencoded");
+
+                        // Send the POST request to Azure AD
+                        using (var response = await httpClient.PostAsync(requestUrl, content))
                         {
-                            // Read the response content
-                            var responseContent = await response.Content.ReadAsStringAsync();
-                            var jsonObj = JsonConvert.DeserializeObject(responseContent);
-                            return new OkObjectResult(jsonObj);
-                        }
-                        else
-                        {
-                            // Handle error cases here
-                            // For example, log the error or throw an exception
-                            return new ConflictObjectResult(new B2CResponseModel($"Invalid username or password.", HttpStatusCode.Conflict));
+                            // Check if the request was successful
+                            if (response.IsSuccessStatusCode)
+                            {
+                                // Read the response content
+                                var responseContent = await response.Content.ReadAsStringAsync();
+                                var jsonObj = JsonConvert.DeserializeObject(responseContent);
+                                return new OkObjectResult(jsonObj);
+                            }
+                            else
+                            {
+                                // Handle error cases here
+                                // For example, _logger the error or throw an exception
+                                return new ConflictObjectResult(new B2CResponseModel($"Invalid username or password.", HttpStatusCode.Conflict));
+                            }
                         }
                     }
                 }
-            }
-
-            else
-            {
-                var scopes = new[] { "https://graph.microsoft.com/.default" };
-                // Values from app registration  
-                var clientId = "your-client-id-to-call-graph";
-                var clientSecret = "your-client-secret";
-
-                // using Azure.Identity;  
-                var options = new TokenCredentialOptions
+                else
                 {
-                    AuthorityHost = AzureAuthorityHosts.AzurePublicCloud
-                };
+                    var scopes = new[] { "https://graph.microsoft.com/.default" };
+                    // Values from app registration  
+                    
+                    //var clientId = "your-client-id-to-call-graph";
+                    var clientId = _configuration["AzureAd:ClientId"];
 
-                // https://learn.microsoft.com/dotnet/api/azure.identity.clientsecretcredential  
-                var clientSecretCredential = new ClientSecretCredential(
-                    tenantId, clientId, clientSecret, options);
+                    //var clientSecret = "your-client-secret";
+                    var clientSecret = _configuration.GetSection("AzureAd:ClientCredentials")
+                        .GetChildren()
+                        .FirstOrDefault(c => c.GetValue<string>("SourceType") == "ClientSecret")
+                        ?.GetValue<string>("ClientSecret");
 
-                // get accessToken          
-                var accessToken = await clientSecretCredential.GetTokenAsync(new Azure.Core.TokenRequestContext(scopes) { });
-
-                Console.WriteLine(accessToken.Token);
-
-                var graphClient = new GraphServiceClient(clientSecretCredential, scopes);
-
-                if (objectId != null && method == "read")
-                {
-                    var user = await graphClient.Users[objectId].GetAsync();
-                    log.LogInformation(user.ToString());
-                    return new OkObjectResult(user);
-                }
-
-                if (email != null && method == "read")
-                {
-                    var user = await graphClient.Users.GetAsync((requestConfiguration) =>
+                    // using Azure.Identity;  
+                    var options = new TokenCredentialOptions
                     {
-                        requestConfiguration.QueryParameters.Filter = string.Format("identities/any(x:x/issuerAssignedId eq '{0}' and x/issuer eq 'ciamprod.onmicrosoft.com')  ", email);
-                    });
-                    return new OkObjectResult(user);
-                }
+                        AuthorityHost = AzureAuthorityHosts.AzurePublicCloud
+                    };
 
-                if (method == "createUser")
-                {
-                    var userRequestBody = new User
+                    // https://learn.microsoft.com/dotnet/api/azure.identity.clientsecretcredential  
+                    var clientSecretCredential = new ClientSecretCredential(
+                        tenantId, clientId, clientSecret, options);
+
+                    // get accessToken          
+                    var accessToken = await clientSecretCredential.GetTokenAsync(new Azure.Core.TokenRequestContext(scopes) { });
+
+                    Console.WriteLine(accessToken.Token);
+
+                    var graphClient = new GraphServiceClient(clientSecretCredential, scopes);
+
+                    if (objectId != null && method == "read")
                     {
-                        DisplayName = displayName,
-                        Identities = new List<ObjectIdentity>
+                        var user = await graphClient.Users[objectId].GetAsync();
+                        _logger.LogInformation(user.ToString());
+                        return new OkObjectResult(user);
+                    }
+
+                    if (email != null && method == "read")
+                    {
+                        var user = await graphClient.Users.GetAsync((requestConfiguration) =>
+                        {
+                            requestConfiguration.QueryParameters.Filter = string.Format("identities/any(x:x/issuerAssignedId eq '{0}' and x/issuer eq 'ciamprod.onmicrosoft.com')  ", email);
+                        });
+                        return new OkObjectResult(user);
+                    }
+
+                    /*
+                    if (method == "createUser")
+                    {
+                        var userRequestBody = new User
+                        {
+                            DisplayName = displayName,
+                            Identities = new List<ObjectIdentity>
                     {
                         new ObjectIdentity
                         {
@@ -164,64 +180,71 @@ namespace AuthConnector.Controllers
                             IssuerAssignedId = email,
                         }
                     },
-                        PasswordProfile = new PasswordProfile
-                        {
-                            Password = password,
-                            ForceChangePasswordNextSignIn = false,
-                        },
-                        PasswordPolicies = "DisablePasswordExpiration",
-                    };
-                    try
-                    {
-                        var result = await graphClient.Users.PostAsync(userRequestBody);
-                        string stringObjectId = result.Id;
-
+                            PasswordProfile = new PasswordProfile
+                            {
+                                Password = password,
+                                ForceChangePasswordNextSignIn = false,
+                            },
+                            PasswordPolicies = "DisablePasswordExpiration",
+                        };
                         try
                         {
-                            await DoWithRetryAsync(TimeSpan.FromSeconds(1), tryCount: 10, stringObjectId, email, graphClient);
+                            var result = await graphClient.Users.PostAsync(userRequestBody);
+                            string stringObjectId = result.Id;
 
+                            try
+                            {
+                                await DoWithRetryAsync(TimeSpan.FromSeconds(1), tryCount: 10, stringObjectId, email, graphClient);
+
+                            }
+                            catch (Exception enrolEx)
+                            {
+                                return new ConflictObjectResult(enrolEx);
+                            }
+
+                            return new OkObjectResult(result);
                         }
-                        catch (Exception enrolEx)
+                        catch (Exception ex)
                         {
-                            return new ConflictObjectResult(enrolEx);
+                            return new ConflictObjectResult(new B2CResponseModel($"This account already exists.", HttpStatusCode.Conflict));
+                        }
+                    }
+
+                    if (method == "getPhone")
+                    {
+                        try
+                        {
+                            var result = await graphClient.Users[objectId].Authentication.PhoneMethods.GetAsync();
+                            return new OkObjectResult(result.Value[0]);
                         }
 
-                        return new OkObjectResult(result);
+                        catch (Exception exception)
+                        {
+                            var jsonObject = new JObject();
+                            jsonObject.Add("phoneNumber", "null");
+                            return new OkObjectResult(jsonObject);
+                        }
+
                     }
-                    catch (Exception ex)
+
+                    if (method == "setPhone")
                     {
-                        return new ConflictObjectResult(new B2CResponseModel($"This account already exists.", HttpStatusCode.Conflict));
+
+                        var mfaRequestBody = new PhoneAuthenticationMethod
+                        {
+                            PhoneNumber = phoneNumber,
+                            PhoneType = AuthenticationPhoneType.Mobile,
+                        };
+                        var enrolResult = await graphClient.Users[objectId].Authentication.PhoneMethods.PostAsync(mfaRequestBody);
+                        return new OkObjectResult(enrolResult);
                     }
+                    */
                 }
-
-                if (method == "getPhone")
-                {
-                    try
-                    {
-                        var result = await graphClient.Users[objectId].Authentication.PhoneMethods.GetAsync();
-                        return new OkObjectResult(result.Value[0]);
-                    }
-
-                    catch (Exception exception)
-                    {
-                        var jsonObject = new JObject();
-                        jsonObject.Add("phoneNumber", "null");
-                        return new OkObjectResult(jsonObject);
-                    }
-
-                }
-
-                if (method == "setPhone")
-                {
-
-                    var mfaRequestBody = new PhoneAuthenticationMethod
-                    {
-                        PhoneNumber = phoneNumber,
-                        PhoneType = AuthenticationPhoneType.Mobile,
-                    };
-                    var enrolResult = await graphClient.Users[objectId].Authentication.PhoneMethods.PostAsync(mfaRequestBody);
-                    return new OkObjectResult(enrolResult);
-                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while processing the request.");
+                //throw;
             }
 
             return new OkObjectResult(null);
