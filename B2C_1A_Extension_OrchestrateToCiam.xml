@@ -521,7 +521,7 @@
                     <Protocol Name="Proprietary" Handler="Web.TPEngine.Providers.RestfulProvider, Web.TPEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
                     <Metadata>
                         <!-- Set the ServiceUrl with your own REST API endpoint -->
-                        <Item Key="ServiceUrl">https://espauthconnector-dugpfmagezhfhkbb.centralus-01.azurewebsites.net/Login</Item>
+                        <Item Key="ServiceUrl">https://yoursite</Item>
                         <Item Key="SendClaimsIn">Body</Item>
                         <!-- Set AuthenticationType to Basic or ClientCertificate in production environments -->
                         <Item Key="AuthenticationType">None</Item>
@@ -552,7 +552,7 @@
                     <Protocol Name="Proprietary" Handler="Web.TPEngine.Providers.RestfulProvider, Web.TPEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
                     <Metadata>
                         <!-- Set the ServiceUrl with your own REST API endpoint -->
-                        <Item Key="ServiceUrl">https://espauthconnector-dugpfmagezhfhkbb.centralus-01.azurewebsites.net/Login</Item>
+                        <Item Key="ServiceUrl">https://yoursite</Item>
                         <Item Key="SendClaimsIn">Body</Item>
                         <!-- Set AuthenticationType to Basic or ClientCertificate in production environments -->
                         <Item Key="AuthenticationType">None</Item>
@@ -579,7 +579,7 @@
                     <DisplayName>non interactive authentication to APAC</DisplayName>
                     <Protocol Name="Proprietary" Handler="Web.TPEngine.Providers.RestfulProvider, Web.TPEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
                     <Metadata>
-                        <Item Key="ServiceUrl">https://espauthconnector-dugpfmagezhfhkbb.centralus-01.azurewebsites.net/Login</Item>
+                        <Item Key="ServiceUrl">https://yoursite</Item>
                         <Item Key="AuthenticationType">None</Item>
                         <Item Key="SendClaimsIn">Body</Item>
                         <Item Key="AllowInsecureAuthInProduction">true</Item>
@@ -628,7 +628,7 @@
                     <Protocol Name="Proprietary" Handler="Web.TPEngine.Providers.RestfulProvider, Web.TPEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
                     <Metadata>
                         <!-- Set the ServiceUrl with your own REST API endpoint -->
-                        <Item Key="ServiceUrl">https://espauthconnector-dugpfmagezhfhkbb.centralus-01.azurewebsites.net/Logint</Item>
+                        <Item Key="ServiceUrl">https://yoursitet</Item>
                         <Item Key="SendClaimsIn">Body</Item>
                         <!-- Set AuthenticationType to Basic or ClientCertificate in production environments -->
                         <Item Key="AuthenticationType">None</Item>
@@ -652,7 +652,7 @@
                     <Protocol Name="Proprietary" Handler="Web.TPEngine.Providers.RestfulProvider, Web.TPEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
                     <Metadata>
                         <!-- Set the ServiceUrl with your own REST API endpoint -->
-                        <Item Key="ServiceUrl">https://espauthconnector-dugpfmagezhfhkbb.centralus-01.azurewebsites.net/Login</Item>
+                        <Item Key="ServiceUrl">https://yoursite</Item>
                         <Item Key="SendClaimsIn">Body</Item>
                         <!-- Set AuthenticationType to Basic or ClientCertificate in production environments -->
                         <Item Key="AuthenticationType">None</Item>
