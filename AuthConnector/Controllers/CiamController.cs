@@ -16,6 +16,8 @@ using System.Collections.Generic;
 using System.Net;
 using System.Reflection;
 using System.Net.Http;
+using Microsoft.Identity.Client;
+using Microsoft.Identity.Client.Extensions.Msal;
 
 namespace AuthConnector.Controllers
 {
@@ -72,36 +74,43 @@ namespace AuthConnector.Controllers
 
                     if (ciamRequest.method == "auth")
                     {
-
-                        //var scopes = new[] { "User.ReadWrite.All" };
-                        var scopes = new[] { "User.Read" };
-
-                        // Multi-tenant apps can use "common",
-                        // single-tenant apps must use the tenant ID from the Azure portal
-                        //var tenantId = "common";
-                        var tenantId = _configuration["AzureAd:TenantId"];
-
-                        // Value from app registration
                         var clientId = _configuration["AzureAd:ClientId"];
+                        var tenant = _configuration["AzureAd:TenantId"];
+                        var b2cDomain = _configuration["AzureAd:Domain"]; // e.g. yourtenant.b2clogin.com
+                        var policy = _configuration["AzureAd:SignInPolicy"]; // e.g. B2C_1A_ROPC_Auth
 
-                        // using Azure.Identity;
-                        var options = new UsernamePasswordCredentialOptions
+                        var authority = $"https://{b2cDomain}/{tenant}/{policy}/v2.0/";
+
+                        var app = PublicClientApplicationBuilder.Create(clientId)
+                            .WithB2CAuthority(authority)
+                            .Build();
+
+                        var scopes = new[] { "https://graph.microsoft.com/User.Read" };
+
+                        try
                         {
-                            AuthorityHost = AzureAuthorityHosts.AzurePublicCloud,
-                        };
+                            var result = await app.AcquireTokenByUsernamePassword(
+                                scopes,
+                                ciamRequest.email,
+                                new System.Net.NetworkCredential("", ciamRequest.password).SecurePassword
+                            ).ExecuteAsync();
 
-                        // https://learn.microsoft.com/dotnet/api/azure.identity.usernamepasswordcredential
-                        var userNamePasswordCredential = new UsernamePasswordCredential(
-                            ciamRequest.email, ciamRequest.password, tenantId, clientId, options);
+                            // Use the access token to call Microsoft Graph (Graph SDK v5+)
+                            var httpClient = new HttpClient();
+                            httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", result.AccessToken);
+                            var graphClient = new GraphServiceClient(httpClient);
 
-                        var graphClient = new GraphServiceClient(userNamePasswordCredential, scopes);
-
-                        // Get the user and log the details
-                        var user = await graphClient.Users[ciamRequest.objectId].GetAsync();
-                        
-                        // Log the user details
-                        log.Message = JsonConvert.SerializeObject(user);
-
+                            var user = await graphClient.Users[ciamRequest.objectId].GetAsync();
+                            return new OkObjectResult(user);
+                        }
+                        catch (MsalUiRequiredException ex)
+                        {
+                            return BadRequest($"Authentication failed: {ex.Message}");
+                        }
+                        catch (Exception ex)
+                        {
+                            return StatusCode(500, $"Error: {ex.Message}");
+                        }
                     }
 
                     // Log the deserialized object
