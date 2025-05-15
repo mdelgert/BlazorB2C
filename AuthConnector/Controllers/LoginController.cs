@@ -26,65 +26,82 @@ namespace AuthConnector.Controllers
         [HttpPost]
         public async Task<IActionResult> Post()
         {
+            // Get the request body for POST
+            string requestBody = await new StreamReader(Request.Body).ReadToEndAsync();
+            return await HandleLoginAsync(requestBody, isPost: true);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            // No request body for GET
+            return await HandleLoginAsync(null, isPost: false);
+        }
+
+        // Shared logic for both GET and POST
+        private async Task<IActionResult> HandleLoginAsync(string? requestBody, bool isPost)
+        {
             try
             {
                 var log = new LogModel
                 {
                     LogLevel = "Info",
-                    Message = ""
+                    Message = isPost ? "Login requested" : "Login GET requested"
                 };
 
-                _logger.LogInformation("Login requested");
-                log.Message = "Login requested";
+                _logger.LogInformation(isPost ? "Login requested" : "Login GET requested");
+                log.Message = isPost ? "Login requested" : "Login GET requested";
 
-                // Get the request body
-                string requestBody = await new StreamReader(Request.Body).ReadToEndAsync();
-                
-                if (string.IsNullOrWhiteSpace(requestBody))
+                if (isPost)
                 {
-                    _logger.LogWarning("Request body is null or empty.");
-                    log.Message = "Request body cannot be empty.";
-                    //return BadRequest();
-                }
+                    if (string.IsNullOrWhiteSpace(requestBody))
+                    {
+                        _logger.LogWarning("Request body is null or empty.");
+                        log.Message = "Request body cannot be empty.";
+                        //return BadRequest();
+                    }
+                    else
+                    {
+                        // Get the json body using Newtonsoft.Json
+                        object? data = null;
+                        try
+                        {
+                            data = JsonConvert.DeserializeObject(requestBody);
+                        }
+                        catch (JsonException jsonEx)
+                        {
+                            _logger.LogWarning(jsonEx, "Invalid JSON in request body.");
+                            log.Message = "Invalid JSON format.";
+                            //return BadRequest("Invalid JSON format.");
+                        }
 
-                // Get the json body using Newtonsoft.Json
-                object? data = null;
-                try
-                {
-                    data = JsonConvert.DeserializeObject(requestBody);
-                }
-                catch (JsonException jsonEx)
-                {
-                    _logger.LogWarning(jsonEx, "Invalid JSON in request body.");
-                    log.Message = "Invalid JSON format.";
-                    //return BadRequest("Invalid JSON format.");
-                }
-
-                if (data == null)
-                {
-                    _logger.LogWarning("Deserialized data is null.");
-                    log.Message = "Request body could not be parsed.";
-                    //return BadRequest("Request body could not be parsed.");
-                }
-                else
-                {
-                    log.Message = data?.ToString() ?? string.Empty;
+                        if (data == null)
+                        {
+                            _logger.LogWarning("Deserialized data is null.");
+                            log.Message = "Request body could not be parsed.";
+                            //return BadRequest("Request body could not be parsed.");
+                        }
+                        else
+                        {
+                            log.Message = data?.ToString() ?? string.Empty;
+                        }
+                    }
                 }
 
                 // Check HTTP basic authorization using the Request property
-                if (!Authorize())
-                {
-                    _logger.LogWarning("HTTP basic authentication validation failed.");
-                    log.Message = "HTTP basic authentication validation failed.";
-                    //return new UnauthorizedResult();
-                }
+                //if (!Authorize())
+                //{
+                //    _logger.LogWarning("HTTP basic authentication validation failed.");
+                //    log.Message = "HTTP basic authentication validation failed.";
+                //    //return new UnauthorizedResult();
+                //}
 
                 await _context.Logs.AddAsync(log);
                 await _context.SaveChangesAsync();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while logging the login request");
+                _logger.LogError(ex, $"An error occurred while logging the login {(isPost ? "POST" : "GET")} request");
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while processing your request.");
             }
 
