@@ -1,4 +1,4 @@
-﻿/*
+﻿
 using AuthConnector.Models;
 using AuthConnector.Services;
 using Microsoft.AspNetCore.Http;
@@ -272,4 +272,3 @@ namespace AuthConnector.Controllers
         }
     }
 }
-*/
