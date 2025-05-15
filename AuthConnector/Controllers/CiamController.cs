@@ -59,34 +59,31 @@ namespace AuthConnector.Controllers
 
                 var log = new LogModel();
 
-                if (!string.IsNullOrEmpty(requestBody))
+                if (!string.IsNullOrWhiteSpace(requestBody))
                 {
                     // Get the json body using Newtonsoft.Json
-                    object? data = null;
+                    dynamic? data = JsonConvert.DeserializeObject(requestBody!);
 
-                    try
+                    if (data == null)
                     {
-                        data = JsonConvert.DeserializeObject(requestBody);
-
-                        if (data == null)
-                        {
-                            _logger.LogWarning("Deserialized data is null.");
-                        }
-                        else
-                        {
-                            log.Message = data?.ToString() ?? string.Empty;
-
-                            // Log the request body
-                            await _context.Logs.AddAsync(log);
-                            await _context.SaveChangesAsync();
-
-
-
-                        }
+                        _logger.LogWarning("Deserialized data is null.");
                     }
-                    catch (JsonException jsonEx)
+                    else
                     {
-                        _logger.LogWarning(jsonEx, "Invalid JSON in request body.");
+                        log.Message = data?.ToString() ?? string.Empty;
+                        // Log the request body
+                        await _context.Logs.AddAsync(log);
+                        await _context.SaveChangesAsync();
+
+                        // Safely extract properties from the request body
+                        string objectId = data?.objectId != null ? (string)data.objectId : string.Empty;
+                        string email = data?.email != null ? (string)data.email : string.Empty;
+                        string password = data?.password != null ? (string)data.password : string.Empty;
+                        string method = data?.method != null ? (string)data.method : string.Empty;
+                        string phoneNumber = data?.phoneNumber != null ? (string)data.phoneNumber : string.Empty;
+                        string displayName = data?.displayName != null ? (string)data.displayName : string.Empty;
+                        string givenName = data?.givenName != null ? (string)data.givenName : string.Empty;
+                        string surName = data?.surName != null ? (string)data.surName : string.Empty;
                     }
                 }
             }
@@ -96,37 +93,6 @@ namespace AuthConnector.Controllers
             }
 
             return new OkObjectResult(null);
-        }
-
-        public static async Task EnrolEmail(GraphServiceClient graphClient, string email, string objectId)
-        {
-            var emailAuthMethodRequestBody = new EmailAuthenticationMethod
-            {
-                EmailAddress = email
-            };
-            var result = await graphClient.Users[objectId].Authentication.EmailMethods.PostAsync(emailAuthMethodRequestBody);
-            //return new OkObjectResult(enrolResult);
-        }
-
-        public static async Task DoWithRetryAsync(TimeSpan sleepPeriod, int tryCount = 3, string objectId = "test", string email = "test", GraphServiceClient graphClient = null)
-        {
-            if (tryCount <= 0)
-                throw new ArgumentOutOfRangeException(nameof(tryCount));
-
-            while (true)
-            {
-                try
-                {
-                    await EnrolEmail(graphClient, email, objectId);
-                    return;
-                }
-                catch
-                {
-                    if (--tryCount == 0)
-                        throw;
-                    await Task.Delay(sleepPeriod);
-                }
-            }
         }
 
         public class B2CResponseModel
@@ -139,7 +105,7 @@ namespace AuthConnector.Controllers
             {
                 this.userMessage = message;
                 this.status = (int)status;
-                this.version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                this.version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "1.0.0.0";
             }
         }
     }
