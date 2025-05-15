@@ -38,7 +38,6 @@ namespace AuthConnector.Controllers
         public async Task<IActionResult> Post()
         {
             // Get the request body for POST
-            string requestBody = await new StreamReader(Request.Body).ReadToEndAsync();
             return await HandleLoginAsync(isPost: true);
         }
 
