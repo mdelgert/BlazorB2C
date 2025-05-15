@@ -61,30 +61,17 @@ namespace AuthConnector.Controllers
 
                 if (!string.IsNullOrWhiteSpace(requestBody))
                 {
-                    // Get the json body using Newtonsoft.Json
-                    dynamic? data = JsonConvert.DeserializeObject(requestBody!);
+                    // Log the request body
+                    log.Message = requestBody;
 
-                    if (data == null)
-                    {
-                        _logger.LogWarning("Deserialized data is null.");
-                    }
-                    else
-                    {
-                        log.Message = data?.ToString() ?? string.Empty;
-                        // Log the request body
-                        await _context.Logs.AddAsync(log);
-                        await _context.SaveChangesAsync();
+                    await _context.Logs.AddAsync(log);
+                    await _context.SaveChangesAsync();
 
-                        // Safely extract properties from the request body
-                        string objectId = data?.objectId != null ? (string)data.objectId : string.Empty;
-                        string email = data?.email != null ? (string)data.email : string.Empty;
-                        string password = data?.password != null ? (string)data.password : string.Empty;
-                        string method = data?.method != null ? (string)data.method : string.Empty;
-                        string phoneNumber = data?.phoneNumber != null ? (string)data.phoneNumber : string.Empty;
-                        string displayName = data?.displayName != null ? (string)data.displayName : string.Empty;
-                        string givenName = data?.givenName != null ? (string)data.givenName : string.Empty;
-                        string surName = data?.surName != null ? (string)data.surName : string.Empty;
-                    }
+                    // Deserialize into a strongly-typed model
+                    var ciamRequest = JsonConvert.DeserializeObject<CiamRequestModel>(requestBody!);
+
+                    // Log the deserialized object
+                    log.Message = JsonConvert.SerializeObject(ciamRequest);
                 }
             }
             catch (Exception ex)
@@ -93,6 +80,19 @@ namespace AuthConnector.Controllers
             }
 
             return new OkObjectResult(null);
+        }
+
+        // Model for incoming request body
+        public class CiamRequestModel
+        {
+            public string? objectId { get; set; }
+            public string? email { get; set; }
+            public string? password { get; set; }
+            public string? method { get; set; }
+            public string? phoneNumber { get; set; }
+            public string? displayName { get; set; }
+            public string? givenName { get; set; }
+            public string? surName { get; set; }
         }
 
         public class B2CResponseModel
