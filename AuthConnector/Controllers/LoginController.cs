@@ -27,22 +27,23 @@ namespace AuthConnector.Controllers
         public async Task<IActionResult> Post()
         {
             // Get the request body for POST
-            string requestBody = await new StreamReader(Request.Body).ReadToEndAsync();
-            return await HandleLoginAsync(requestBody, isPost: true);
+            return await HandleLoginAsync(isPost: true);
         }
 
         [HttpGet]
         public async Task<IActionResult> Get()
         {
             // No request body for GET
-            return await HandleLoginAsync(null, isPost: false);
+            return await HandleLoginAsync(isPost: false);
         }
 
         // Shared logic for both GET and POST
-        private async Task<IActionResult> HandleLoginAsync(string? requestBody, bool isPost)
+        private async Task<IActionResult> HandleLoginAsync(bool isPost)
         {
             try
             {
+                string? requestBody = Request.ContentLength > 0 ? await new StreamReader(Request.Body).ReadToEndAsync() : null;
+
                 var log = new LogModel
                 {
                     LogLevel = "Info",
