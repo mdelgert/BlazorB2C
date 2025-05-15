@@ -79,7 +79,12 @@ namespace AuthConnector.Controllers
                         var b2cDomain = _configuration["AzureAd:Domain"]; // e.g. yourtenant.b2clogin.com
                         var policy = _configuration["AzureAd:SignInPolicy"]; // e.g. B2C_1A_ROPC_Auth
 
-                        var authority = $"https://{b2cDomain}/{tenant}/{policy}/v2.0/";
+                        //var authority = $"https://{b2cDomain}/{tenant}/{policy}/v2.0/";
+                        //var authority = $"https://{b2cDomain}/{tenant}/{policy}/oauth2/v2.0/authorize";
+                        var authority = $"https://{b2cDomain}/{tenant}/{policy}/oauth2/v2.0/token";
+
+                        //Log the authority URL
+                        _logger.LogInformation($"Authority URL: {authority}");
 
                         var app = PublicClientApplicationBuilder.Create(clientId)
                             .WithB2CAuthority(authority)
