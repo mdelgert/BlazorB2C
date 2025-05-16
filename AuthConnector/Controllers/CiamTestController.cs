@@ -1,7 +1,5 @@
 ﻿using AuthConnector.Models;
 using AuthConnector.Services;
-using Microsoft.AspNetCore.Http;
-
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -82,7 +80,6 @@ namespace AuthConnector.Controllers
                     using (var httpClient = new HttpClient())
                     {
                         // Build the request URL
-                        //var requestUrl = "https://ciamprod.ciamlogin.com/c9d7a627-dfab-45ba-92ee-54b19379dc3d/oauth2/token";
                         var requestUrl = $"https://{tenantName}.ciamlogin.com/{tenantId}/oauth2/token";
 
                         string auth_resource = "https://graph.microsoft.com"; // Replace with your specific resource URL
