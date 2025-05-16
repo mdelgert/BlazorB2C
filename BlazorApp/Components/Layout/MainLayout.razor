@@ -13,12 +13,13 @@
                     <Authorized>
                         @if (context.User.Identity?.Name != null)
                         {
-                            var email = context.User.Claims.FirstOrDefault(c => c.Type == "emails")?.Value;
-                            
-                            //Logger.LogInformation($"User logged in: {context.User.Identity.Name}, Email: {email}");
+                            //var email = context.User.Claims.FirstOrDefault(c => c.Type == "emails")?.Value;
+                            var email = context.User.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Value;
+
+                            Logger.LogInformation($"User logged in: {context.User.Identity.Name}, Email: {email}");
 
                             //Log the entire claims for debugging
-                            Logger.LogInformation($"Claims: {string.Join(", ", context.User.Claims.Select(c => $"{c.Type}: {c.Value}"))}");
+                            //Logger.LogInformation($"Claims: {string.Join(", ", context.User.Claims.Select(c => $"{c.Type}: {c.Value}"))}");
 
                             <text>@email</text>
                         }
@@ -26,7 +27,7 @@
                         {
                             <text>Welcome @context.User.Identity?.Name</text>
                         }
-                        Welcome @context.User.Identity?.Name
+                        @* Welcome @context.User.Identity?.Name *@
                         <a href="/MicrosoftIdentity/Account/SignOut">Log out</a>
                     </Authorized>
                     <NotAuthorized>
