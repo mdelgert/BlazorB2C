@@ -40,7 +40,6 @@ namespace AuthConnector.Controllers
         public async Task<IActionResult> Post()
         {
             // Get the request body for POST
-            string requestBody = await new StreamReader(Request.Body).ReadToEndAsync();
             return await HandleLoginAsync(isPost: true);
         }
 
@@ -76,13 +75,16 @@ namespace AuthConnector.Controllers
 
                 //var tenantId = "your-tenant-id-guid";
                 var tenantId = _configuration["AzureAd:TenantId"];
+                var tenantName = _configuration["AzureAd:TenantName"];
 
                 if (method == "auth")
                 {
                     using (var httpClient = new HttpClient())
                     {
                         // Build the request URL
-                        var requestUrl = "https://ciamprod.ciamlogin.com/c9d7a627-dfab-45ba-92ee-54b19379dc3d/oauth2/token";
+                        //var requestUrl = "https://ciamprod.ciamlogin.com/c9d7a627-dfab-45ba-92ee-54b19379dc3d/oauth2/token";
+                        var requestUrl = $"https://{tenantName}.ciamlogin.com/{tenantId}/oauth2/token";
+
                         string auth_resource = "https://graph.microsoft.com"; // Replace with your specific resource URL
                         
                         //string auth_clientId = "your-clientId-RopcFromB2C";
@@ -101,9 +103,12 @@ namespace AuthConnector.Controllers
                             if (response.IsSuccessStatusCode)
                             {
                                 // Read the response content
+                                //var responseContent = await response.Content.ReadAsStringAsync();
+                                //var jsonObj = JsonConvert.DeserializeObject(responseContent);
+                                //return new OkObjectResult(jsonObj);
+
                                 var responseContent = await response.Content.ReadAsStringAsync();
-                                var jsonObj = JsonConvert.DeserializeObject(responseContent);
-                                return new OkObjectResult(jsonObj);
+                                return Content(responseContent, "application/json");
                             }
                             else
                             {
