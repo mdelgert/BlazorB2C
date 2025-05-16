@@ -151,17 +151,25 @@ namespace AuthConnector.Controllers
                     {
                         var user = await graphClient.Users[objectId].GetAsync();
                         _logger.LogInformation(user.ToString());
-                        return new OkObjectResult(user);
+
+                        var dto = new UserClaimsDto
+                        {
+                            DisplayName = user.DisplayName,
+                            Mail = user.Mail,
+                            GivenName = user.GivenName,
+                            Surname = user.Surname
+                        };
+                        return new OkObjectResult(dto);
                     }
 
-                    if (email != null && method == "read")
-                    {
-                        var user = await graphClient.Users.GetAsync((requestConfiguration) =>
-                        {
-                            requestConfiguration.QueryParameters.Filter = string.Format("identities/any(x:x/issuerAssignedId eq '{0}' and x/issuer eq 'ciamprod.onmicrosoft.com')  ", email);
-                        });
-                        return new OkObjectResult(user);
-                    }
+                    //if (email != null && method == "read")
+                    //{
+                    //    var user = await graphClient.Users.GetAsync((requestConfiguration) =>
+                    //    {
+                    //        requestConfiguration.QueryParameters.Filter = string.Format("identities/any(x:x/issuerAssignedId eq '{0}' and x/issuer eq 'ciamprod.onmicrosoft.com')  ", email);
+                    //    });
+                    //    return new OkObjectResult(user);
+                    //}
 
                     if (method == "createUser")
                     {
@@ -290,6 +298,15 @@ namespace AuthConnector.Controllers
                 this.status = (int)status;
                 this.version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             }
+        }
+
+        // DTO for returning user claims
+        public class UserClaimsDto
+        {
+            public string? DisplayName { get; set; }
+            public string? Mail { get; set; }
+            public string? GivenName { get; set; }
+            public string? Surname { get; set; }
         }
     }
 }

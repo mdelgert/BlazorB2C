@@ -407,3 +407,4 @@ FodyWeavers.xsd
 # https://docs.microsoft.com/en-us/azure/active-directory-b2c/custom-policy-get-started
 B2C_1A_Extension_OrchestrateToCiamAzure1.xml
 B2C_1A_Extension_OrchestrateToCiamAzure2.xml
+B2C_1A_Extension_OrchestrateToCiamAzure3.xml
