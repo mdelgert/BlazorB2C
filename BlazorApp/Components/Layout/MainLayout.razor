@@ -14,7 +14,12 @@
                         @if (context.User.Identity?.Name != null)
                         {
                             var email = context.User.Claims.FirstOrDefault(c => c.Type == "emails")?.Value;
-                            Logger.LogInformation($"User logged in: {context.User.Identity.Name}, Email: {email}");
+                            
+                            //Logger.LogInformation($"User logged in: {context.User.Identity.Name}, Email: {email}");
+
+                            //Log the entire claims for debugging
+                            Logger.LogInformation($"Claims: {string.Join(", ", context.User.Claims.Select(c => $"{c.Type}: {c.Value}"))}");
+
                             <text>@email</text>
                         }
                         else

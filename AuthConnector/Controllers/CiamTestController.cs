@@ -154,11 +154,16 @@ namespace AuthConnector.Controllers
 
                         var dto = new UserClaimsDto
                         {
+                            ObjectId = user.Id,
                             DisplayName = user.DisplayName,
                             Mail = user.Mail,
+                            Email = user.Mail,
+                            //OtherMails = user.OtherMails != null ? user.OtherMails.ToList() : new List<string>(),
+                            OtherMails = new List<string> { user.Mail },
                             GivenName = user.GivenName,
-                            Surname = user.Surname
+                            Surname = user.Surname,
                         };
+
                         return new OkObjectResult(dto);
                     }
 
@@ -303,8 +308,11 @@ namespace AuthConnector.Controllers
         // DTO for returning user claims
         public class UserClaimsDto
         {
+            public string? ObjectId { get; set; }
             public string? DisplayName { get; set; }
             public string? Mail { get; set; }
+            public string? Email { get; set; }
+            public List<string>? OtherMails { get; set; }
             public string? GivenName { get; set; }
             public string? Surname { get; set; }
         }
