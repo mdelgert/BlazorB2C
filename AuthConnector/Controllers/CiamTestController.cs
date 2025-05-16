@@ -218,7 +218,8 @@ namespace AuthConnector.Controllers
                         catch (Exception exception)
                         {
                             var jsonObject = new JObject();
-                            jsonObject.Add("phoneNumber", "null");
+                            //jsonObject.Add("phoneNumber", "null");
+                            jsonObject.Add("phoneNumberString", "null");
                             return new OkObjectResult(jsonObject);
                         }
 
