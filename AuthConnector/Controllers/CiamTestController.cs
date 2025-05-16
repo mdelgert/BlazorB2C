@@ -152,12 +152,18 @@ namespace AuthConnector.Controllers
                         var user = await graphClient.Users[objectId].GetAsync();
                         _logger.LogInformation(user.ToString());
 
+                        var emailValue = user.Mail
+                            ?? user.UserPrincipalName
+                            ?? user.Identities?.FirstOrDefault(i => i.SignInType == "emailAddress")?.IssuerAssignedId;
+
+                        //var emailValue = user.Mail;
+
                         var dto = new UserClaimsDto
                         {
                             ObjectId = user.Id,
                             DisplayName = user.DisplayName,
                             Mail = user.Mail,
-                            Email = user.Mail,
+                            Email = emailValue,
                             //OtherMails = user.OtherMails != null ? user.OtherMails.ToList() : new List<string>(),
                             OtherMails = new List<string> { user.Mail },
                             GivenName = user.GivenName,
