@@ -79,6 +79,8 @@ namespace AuthConnector.Controllers
                         var b2cDomain = _configuration["AzureAd:Domain"]; // e.g. yourtenant.b2clogin.com
                         var policy = _configuration["AzureAd:SignInPolicy"]; // e.g. B2C_1A_ROPC_Auth
 
+                        //https://learn.microsoft.com/en-us/azure/active-directory-b2c/tokens-overview#endpoints
+                        //Not working, not sure why ciamlogin.com does work have not found documentation. $"https://{tenantName}.ciamlogin.com/{tenantId}/oauth2/token";
                         //var authority = $"https://{b2cDomain}/{tenant}/{policy}/v2.0/";
                         //var authority = $"https://{b2cDomain}/{tenant}/{policy}/oauth2/v2.0/authorize";
                         var authority = $"https://{b2cDomain}/{tenant}/{policy}/oauth2/v2.0/token";

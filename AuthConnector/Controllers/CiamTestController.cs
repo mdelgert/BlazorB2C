@@ -80,6 +80,7 @@ namespace AuthConnector.Controllers
                     using (var httpClient = new HttpClient())
                     {
                         // Build the request URL
+                        // https://learn.microsoft.com/en-us/azure/active-directory-b2c/tokens-overview#endpoints
                         var requestUrl = $"https://{tenantName}.ciamlogin.com/{tenantId}/oauth2/token";
 
                         string auth_resource = "https://graph.microsoft.com"; // Replace with your specific resource URL
