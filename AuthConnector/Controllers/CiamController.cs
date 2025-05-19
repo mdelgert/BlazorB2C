@@ -96,6 +96,7 @@ namespace AuthConnector.Controllers
 
                         try
                         {
+                            //TODO replaced obsolete AcquireTokenByUsernamePassword with AcquireTokenByUsernamePassword
                             var result = await app.AcquireTokenByUsernamePassword(
                                 scopes,
                                 ciamRequest.email,
