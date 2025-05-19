@@ -85,6 +85,12 @@ namespace AuthConnector.Controllers
                         //var authority = $"https://{b2cDomain}/{tenant}/{policy}/oauth2/v2.0/authorize";
                         var authority = $"https://{b2cDomain}/{tenant}/{policy}/oauth2/v2.0/token";
 
+                        // See links for more information
+                        //https://medium.com/the-new-control-plane/using-entra-external-id-ciam-with-the-msal-samples-86e6de6a8f20
+                        //https://medium.com/the-new-control-plane/error-aadsts500208-in-entra-external-id-ciam-272237d70e69
+                        //https://www.reddit.com/r/AZURE/comments/1cj2y46/microsoft_playing_with_my_sanity/
+                        //https://github.com/damienbod/EntraExternalIdCiam
+                        
                         //Log the authority URL
                         _logger.LogInformation($"Authority URL: {authority}");
 
